@@ -1,19 +1,17 @@
-import {Injectable, OnInit} from '@angular/core';
-import {Company} from '../pages/welcome/Company';
+import {Injectable} from '@angular/core';
+import {Company, CompanyResponse} from '../pages/welcome/Company';
 import {Observable} from 'rxjs';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class CompanyService implements OnInit {
-  body = new HttpParams()
-    .set('draw', 1)
-    .set('order[0][column]', '0')
-    .set('order[0][dir]', 'desc')
-    .set('start', '0')
-    .set('length', '5000')
+export class CompanyService {
+
+  headers = new HttpHeaders({
+    'Content-Type': 'application/x-www-form-urlencoded',
+  });
 
   favouriteCompanies: Company[] = []
 
@@ -22,17 +20,15 @@ export class CompanyService implements OnInit {
   constructor(private http: HttpClient) {
   }
 
-  ngOnInit() {
-    const d: Date = new Date();
-    d.setTime(d.getTime() + 100 * 24 * 60 * 60 * 1000);
-    const expires = `expires=${d.toUTCString()}`;
-    const cpath = '';
-    document.cookie = `Dil479=1; ${expires}${cpath}; SameSite=Lax`;
-  }
-
-  getCompanies(param: string): Observable<any> {
-    this.body.set('search[value]', param)
-    return this.http.post(this.apiUrl, this.body);
+  getCompanies(param: string): Observable<CompanyResponse> {
+    const body = new HttpParams()
+      .set('draw', 1)
+      .set('order[0][column]', '0')
+      .set('order[0][dir]', 'desc')
+      .set('start', '0')
+      .set('length', '5000')
+      .set('search[value]', param)
+    return this.http.post<CompanyResponse>(this.apiUrl, body);
   }
 
   getFavouriteCompanies() {

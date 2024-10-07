@@ -8,7 +8,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NgStyle} from '@angular/common';
 import {NzListComponent, NzListItemComponent} from 'ng-zorro-antd/list';
 import {NzTypographyComponent} from 'ng-zorro-antd/typography';
-import {Company} from './Company';
+import {Company, CompanyResponse} from './Company';
 import {CompanyService} from '../../services/company.service';
 import {OptionType} from '../../services/OptionType';
 
@@ -51,6 +51,14 @@ export class WelcomeComponent implements OnInit {
 
   search(value: string): void {
     this.isLoading = true;
+
+    const body = new HttpParams()
+      .set('draw', 1)
+      .set('order[0][column]', '0')
+      .set('order[0][dir]', 'desc')
+      .set('start', '0')
+      .set('length', '5000')
+      .set('search[value]', value)
 
     this.companyService.getCompanies(value)
       .subscribe(response => {
