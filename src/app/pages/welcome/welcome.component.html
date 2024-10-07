@@ -34,9 +34,9 @@
 
 
 <div class="breaches">
-  @if (selectedCampaignDetails.length) {
+  @if (selectedCompanyDetails.length) {
     <nz-list nzBordered nzHeader="İhlaller">
-      @for (item of selectedCampaignDetails; track item) {
+      @for (item of selectedCompanyDetails; track item) {
         <nz-list-item>
           {{ item.UrunAdi }} - {{ item.Uygunsuzluk }}
         </nz-list-item>

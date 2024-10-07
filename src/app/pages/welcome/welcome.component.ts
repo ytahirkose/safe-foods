@@ -8,7 +8,9 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NgStyle} from '@angular/common';
 import {NzListComponent, NzListItemComponent} from 'ng-zorro-antd/list';
 import {NzTypographyComponent} from 'ng-zorro-antd/typography';
-import {Company, CompanyResponse} from './Company';
+import {Company} from './Company';
+import {CompanyService} from '../../services/company.service';
+import {OptionType} from '../../services/OptionType';
 
 @Component({
   selector: 'app-welcome',
@@ -29,11 +31,6 @@ import {Company, CompanyResponse} from './Company';
   styleUrls: ['./welcome.component.scss']
 })
 
-type OptionType = {
-  value: string;
-  text: string
-}
-
 export class WelcomeComponent implements OnInit {
 
   isLoading = false;
@@ -41,39 +38,25 @@ export class WelcomeComponent implements OnInit {
   listOfOption: OptionType[] = [];
   nzFilterOption = (): boolean => true;
   lastResult: Company[] = [];
-  selectedCampaignDetails: Company[] = [];
+  selectedCompanyDetails: Company[] = [];
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private companyService: CompanyService) {}
 
   ngOnInit() {
-    const d: Date = new Date();
-    d.setTime(d.getTime() + 100 * 24 * 60 * 60 * 1000);
-    const expires = `expires=${d.toUTCString()}`;
-    const cpath = '';
-    document.cookie = `Dil479=1; ${expires}${cpath}; SameSite=Lax`;
   }
 
   select() {
-    this.selectedCampaignDetails = this.lastResult.filter(item => this.selectedValue === item.FirmaAdi);
+    this.selectedCompanyDetails = this.lastResult.filter(item => this.selectedValue === item.FirmaAdi);
   }
 
   search(value: string): void {
-    const body = new HttpParams()
-      .set('draw', 1)
-      .set('order[0][column]', '0')
-      .set('order[0][dir]', 'desc')
-      .set('start', '0')
-      .set('length', '5000')
-      .set('search[value]', value)
-
     this.isLoading = true;
 
-    this.httpClient
-      .post<CompanyResponse>(`https://guvenilirgida.tarimorman.gov.tr/GuvenilirGida/GKD/DataTablesList`, body)
+    this.companyService.getCompanies(value)
       .subscribe(response => {
         this.lastResult = response.data;
         const listOfOption: Array<OptionType> = [];
-        response.data.forEach(item => {
+        response.data.forEach((item: Company) => {
           if (!listOfOption.filter(el => el.value === item.FirmaAdi).length) {
             listOfOption.push({
               value: item.FirmaAdi,
