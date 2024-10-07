@@ -1,0 +1,47 @@
+<div class="search-bar">
+  <nz-select
+    style="width: 280px;"
+    nzShowSearch
+    nzServerSearch
+    nzAllowClear
+    nzPlaceHolder="Firma adı"
+    [(ngModel)]="selectedValue"
+    [nzShowArrow]="false"
+    [nzFilterOption]="nzFilterOption"
+    (nzOnSearch)="search($event)"
+    (ngModelChange)="select()"
+    [nzNotFoundContent]="notFoundContent"
+  >
+    @if (!isLoading) {
+      @for (company of listOfOption; track company.value) {
+        <nz-option [nzLabel]="company.text" [nzValue]="company.value"></nz-option>
+      }
+    } @else {
+      <nz-option nzDisabled nzCustomContent>
+        <span nz-icon nzType="loading" class="loading-icon"></span>
+        Aranıyor...
+      </nz-option>
+    }
+  </nz-select>
+</div>
+
+<ng-template #notFoundContent>
+  <div style="text-align: center;">
+    <i nz-icon nzType="smile" style="font-size: 24px; color: #79ff79;"></i>
+    <p>Henüz bu firmaya ilişkin bir ihlal tespit edilmemiştir.</p>
+  </div>
+</ng-template>
+
+
+<div class="breaches">
+  @if (selectedCampaignDetails.length) {
+    <nz-list nzBordered nzHeader="İhlaller">
+      @for (item of selectedCampaignDetails; track item) {
+        <nz-list-item>
+          {{ item.UrunAdi }} - {{ item.Uygunsuzluk }}
+        </nz-list-item>
+      }
+    </nz-list>
+  }
+</div>
+
