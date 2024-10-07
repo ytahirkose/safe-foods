@@ -1,13 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
 import {FormsModule} from '@angular/forms';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {NzAlertComponent} from 'ng-zorro-antd/alert';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NgStyle} from '@angular/common';
 import {NzListComponent, NzListItemComponent} from 'ng-zorro-antd/list';
 import {NzTypographyComponent} from 'ng-zorro-antd/typography';
+import {Company, CompanyResponse} from './Company';
 
 @Component({
   selector: 'app-welcome',
@@ -27,14 +28,20 @@ import {NzTypographyComponent} from 'ng-zorro-antd/typography';
   ],
   styleUrls: ['./welcome.component.scss']
 })
+
+type OptionType = {
+  value: string;
+  text: string
+}
+
 export class WelcomeComponent implements OnInit {
 
   isLoading = false;
   selectedValue = null;
-  listOfOption: Array<{ value: string; text: string }> = [];
+  listOfOption: OptionType[] = [];
   nzFilterOption = (): boolean => true;
-  lastResult: any[] = [];
-  selectedCampaignDetails: any[] = [];
+  lastResult: Company[] = [];
+  selectedCampaignDetails: Company[] = [];
 
   constructor(private httpClient: HttpClient) {}
 
@@ -48,7 +55,6 @@ export class WelcomeComponent implements OnInit {
 
   select() {
     this.selectedCampaignDetails = this.lastResult.filter(item => this.selectedValue === item.FirmaAdi);
-    console.log(this.selectedCampaignDetails);
   }
 
   search(value: string): void {
@@ -60,30 +66,23 @@ export class WelcomeComponent implements OnInit {
       .set('length', '5000')
       .set('search[value]', value)
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
-    });
-
     this.isLoading = true;
 
     this.httpClient
-      .post<{ data: any[] }>(`https://guvenilirgida.tarimorman.gov.tr/GuvenilirGida/GKD/DataTablesList`, body)
-      .subscribe(data => {
-        this.lastResult = data.data;
-        const listOfOption: Array<{ value: string; text: string }> = [];
-        data.data.forEach(item => {
+      .post<CompanyResponse>(`https://guvenilirgida.tarimorman.gov.tr/GuvenilirGida/GKD/DataTablesList`, body)
+      .subscribe(response => {
+        this.lastResult = response.data;
+        const listOfOption: Array<OptionType> = [];
+        response.data.forEach(item => {
           if (!listOfOption.filter(el => el.value === item.FirmaAdi).length) {
             listOfOption.push({
               value: item.FirmaAdi,
               text: item.FirmaAdi
-            } as any);
+            });
           }
         });
         this.listOfOption = listOfOption;
         this.isLoading = false;
       });
   }
-
-  protected readonly console = console;
-  protected readonly event = event;
 }
