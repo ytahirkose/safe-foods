@@ -44,7 +44,6 @@ export class WelcomeComponent implements OnInit {
     const expires = `expires=${d.toUTCString()}`;
     const cpath = '';
     document.cookie = `Dil479=1; ${expires}${cpath}; SameSite=Lax`;
-    document.cookie = `__RequestVerificationToken=ENEo8O_aHRVgaRRbkrubsrzXYgGK1U1eJ-Rp4LwcdEQOommTUckItDb6zYMEbLQoSfrDvdhP0tDEomdgYAkbSFYI5yY1; TS01c91702=016f66f15e8959bcea3138a0c38951a898b7200b90dc758e0e8411c3be0ea33fd02a187d3e1f9ec6280747fef88582c25c8ddeee4198295828ee288c8d838b3aacff030139070b4c15ac0c9eb609582653333e963c; ${expires}${cpath}; SameSite=Lax`;
   }
 
   select() {

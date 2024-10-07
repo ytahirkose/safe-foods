@@ -1,15 +1,14 @@
 <nz-layout class="app-layout">
   <nz-layout>
-    <nz-header>
-      <div class="app-header">
-        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-            <span class="trigger"
+    <div class="header">
+      <div class="header-trigger" (click)="isCollapsed = !isCollapsed">
+            <span class=""
                   nz-icon
                   [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
             ></span>
-        </span>
       </div>
-    </nz-header>
+      <div class="header-title">İhlal Tespit</div>
+    </div>
     <nz-content>
       <div class="inner-content">
         <router-outlet></router-outlet>
@@ -21,9 +20,10 @@
     [nzVisible]="isCollapsed"
     nzPlacement="left"
     nzTitle=""
+    [nzBodyStyle]="nzBodyStyle"
     (nzOnClose)="close()"
   >
-    <ng-container *nzDrawerContent style="padding: 0">
+    <ng-container *nzDrawerContent style="padding: 0; margin: 0">
       <ul nz-menu nzMode="inline">
         <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
           <ul>

@@ -5,6 +5,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import {NzDrawerComponent, NzDrawerContentDirective} from 'ng-zorro-antd/drawer';
+import {NgStyleInterface} from 'ng-zorro-antd/core/types';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,9 @@ import {NzDrawerComponent, NzDrawerContentDirective} from 'ng-zorro-antd/drawer'
 })
 export class AppComponent {
   isCollapsed = false;
+  nzBodyStyle: NgStyleInterface = {
+    padding: '0',
+  }
 
   open(): void {
     this.isCollapsed = true;
