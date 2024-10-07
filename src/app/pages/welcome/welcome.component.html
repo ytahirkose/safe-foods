@@ -8,7 +8,7 @@
     [(ngModel)]="selectedValue"
     [nzShowArrow]="false"
     [nzFilterOption]="nzFilterOption"
-    (nzOnSearch)="search($event)"
+    (nzOnSearch)="searchTextChanged.next($event)"
     (ngModelChange)="select()"
     [nzNotFoundContent]="notFoundContent"
   >
@@ -26,10 +26,17 @@
 </div>
 
 <ng-template #notFoundContent>
-  <div style="text-align: center;">
-    <i nz-icon nzType="smile" style="font-size: 24px; color: #79ff79;"></i>
-    <p>Henüz bu firmaya ilişkin bir ihlal tespit edilmemiştir.</p>
-  </div>
+  @if (!isLoading && selectedValue) {
+    <div style="text-align: center;">
+      <i nz-icon nzType="smile" style="font-size: 24px; color: #79cf79;"></i>
+      <p>Henüz bu firmaya ilişkin bir ihlal tespit edilmemiştir.</p>
+    </div>
+  } @else {
+    <nz-option nzDisabled nzCustomContent>
+      <span nz-icon nzType="loading" class="loading-icon"></span>
+      Aranıyor...
+    </nz-option>
+  }
 </ng-template>
 
 

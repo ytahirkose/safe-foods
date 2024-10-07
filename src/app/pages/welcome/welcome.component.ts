@@ -11,6 +11,7 @@ import {NzTypographyComponent} from 'ng-zorro-antd/typography';
 import {Company, CompanyResponse} from './Company';
 import {CompanyService} from '../../services/company.service';
 import {OptionType} from '../../services/OptionType';
+import {debounceTime, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-welcome',
@@ -34,15 +35,25 @@ import {OptionType} from '../../services/OptionType';
 export class WelcomeComponent implements OnInit {
 
   isLoading = false;
-  selectedValue = null;
+  selectedValue:string = '';
   listOfOption: OptionType[] = [];
   nzFilterOption = (): boolean => true;
   lastResult: Company[] = [];
   selectedCompanyDetails: Company[] = [];
 
+  searchTextChanged: Subject<string> = new Subject<string>();
+
   constructor(private httpClient: HttpClient, private companyService: CompanyService) {}
 
   ngOnInit() {
+    this.searchTextChanged
+      .pipe(
+        debounceTime(400)
+      )
+      .subscribe(newSearchText => {
+        this.selectedValue = newSearchText;
+        this.search(this.selectedValue);
+      });
   }
 
   select() {
